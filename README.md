@@ -1,6 +1,6 @@
 # WebPushEncryption
 
-![CI workflow badge](https://github.com/github/docs/actions/workflows/ci.yml/badge.svg)
+![CI workflow badge](https://github.com/aenglisc/elixir-web-push-encryption/actions/workflows/ci.yml/badge.svg)
 
 Elixir implementation of [Web Push Payload encryption](https://developers.google.com/web/updates/2016/03/web-push-encryption?hl=en).
 
