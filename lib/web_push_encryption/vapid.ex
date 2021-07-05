@@ -23,12 +23,7 @@ defmodule WebPushEncryption.Vapid do
       }
       |> JOSE.JWT.from_map()
 
-    private_key_record =
-      if @otp_version < 24 do
-        {:ECPrivateKey, 1, private_key, {:namedCurve, {1, 2, 840, 10045, 3, 1, 7}}, public_key}
-      else
-        {:ECPrivateKey, 1, private_key, {:namedCurve, {1, 2, 840, 10045, 3, 1, 7}}, public_key, nil}
-      end
+    private_key_record = private_key_record(private_key, public_key)
 
     jwk = JOSE.JWK.from_key(private_key_record)
 
@@ -36,11 +31,21 @@ defmodule WebPushEncryption.Vapid do
     headers(content_encoding, jwt, vapid[:public_key])
   end
 
+  if @otp_version < 23 do
+    defp private_key_record(private_key, public_key),
+      do: {:ECPrivateKey, 1, private_key, {:namedCurve, {1, 2, 840, 10045, 3, 1, 7}}, public_key}
+  else
+    defp private_key_record(private_key, public_key),
+      do:
+        {:ECPrivateKey, 1, private_key, {:namedCurve, {1, 2, 840, 10045, 3, 1, 7}}, public_key,
+         nil}
+  end
+
   defp headers("aesgcm", jwt, pub) do
     %{"Authorization" => "WebPush " <> jwt, "Crypto-Key" => "p256ecdsa=" <> pub}
   end
 
-  defp headers("aes128gcm", jwt, pub) do
-    %{"Authorization" => "vapid t=#{jwt}, p=#{pub}"}
-  end
+  # defp headers("aes128gcm", jwt, pub) do
+  #   %{"Authorization" => "vapid t=#{jwt}, p=#{pub}"}
+  # end
 end
