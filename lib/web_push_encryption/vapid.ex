@@ -31,7 +31,7 @@ defmodule WebPushEncryption.Vapid do
     headers(content_encoding, jwt, vapid[:public_key])
   end
 
-  if @otp_version < 23 do
+  if @otp_version < 24 do
     defp private_key_record(private_key, public_key),
       do: {:ECPrivateKey, 1, private_key, {:namedCurve, {1, 2, 840, 10045, 3, 1, 7}}, public_key}
   else
